@@ -20,7 +20,6 @@ sound_map = {
 
 def beep(audio_file):
     path = "/home/pi/workspace/simon-says-hotto-doggu/assets/audio/{}".format(audio_file)
-    print(path)
     mix.music.load(path)
     mix.music.play()
 
