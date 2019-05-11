@@ -1,6 +1,6 @@
 import time
 import threading
-import pygame
+import pygame.mixer as mix
 import RPi.GPIO as GPIO
 
 
@@ -11,19 +11,28 @@ button_map = {
     23: 'blue',
 }
 
+sound_map = {
+    'green': 'green.mp3',
+    'red': 'red.mp3',
+    'yellow': 'yellow.mp3',
+    'blue': 'blue.mp3',
+}
 
-def beep():
-    pygame.mixer.init()
-    pygame.mixer.music.load("assets/audio/beep.mp3")
-    pygame.mixer.music.play()
-    while pygame.mixer.music.get_busy() == True:
-        continue
-    
+def beep(audio_file):
+    path = "/home/pi/workspace/simon-says-hotto-doggu/assets/audio/{}".format(audio_file)
+    print(path)
+    mix.music.load(path)
+    mix.music.play()
 
 
 def on_press(p):
-    print(button_map.get(p, '404'))
-    beep()
+    color = button_map.get(p)
+    if not color:
+        return
+
+    afile = sound_map.get(color)
+    print('pressed {}'.format(color))
+    beep(afile)
 
 
 class ButtonHandler(threading.Thread):
@@ -71,6 +80,7 @@ def init_buttons(button_map):
 while __name__ == '__main__':
     GPIO.setmode(GPIO.BCM)
     init_buttons(button_map)
+    mix.init()
 
     input('press enter to quit\n\n')
 
